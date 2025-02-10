@@ -1,16 +1,18 @@
 export type BlockForgeContextType = {
   availableBlocks: BlockDefinition[];
-  editorState: unknown; // TODO: Define editor state type
+  editorState: EditorState;
   isEditable: boolean;
 
   // setters
-  registerBlock: (blocks: BlockDefinition[]) => void;
-  updateEditorState: (state: unknown) => void;
+  registerBlock: (blocks: BlockDefinition[]) => BlockDefinition[];
+  addBlock: (block: BlockDefinition) => void;
+  updateEditorState: (state: EditorState) => void;
   updateIsEditable: (editable: boolean) => void;
 };
 
 export type BlockTypes =
   | "text"
+  | "container"
   | "image"
   | "video"
   | "audio"
@@ -26,7 +28,16 @@ export type BlockDefinition = {
   content?: string;
 };
 
+export type EditorState = {
+  block: BlockDefinition;
+  selectedBlockId: string | undefined;
+};
+
 export type HookReturnType = {
   addBlock: (block: BlockDefinition) => void;
   registerBlock: (blocks: BlockDefinition[]) => BlockDefinition[];
+};
+
+export type EditorComponentProps = {
+  isEditable?: boolean;
 };

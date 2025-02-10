@@ -1,6 +1,7 @@
 import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
 import { BlockForgeContext, initialContext } from "../context/context";
-import { BlockDefinition } from "../types/types";
+import { BlockDefinition, EditorState } from "../types/types";
+import { createBlockInstance } from "../helper/createBlockInstance";
 
 export const BlockForgeProvider: React.FC<{ children: ReactNode }> = ({
   children,
@@ -9,12 +10,10 @@ export const BlockForgeProvider: React.FC<{ children: ReactNode }> = ({
     initialContext.availableBlocks
   );
 
-  const [availableBlock, setAvailableBlock] = useState<BlockDefinition[]>(
+  const [availableBlock, setAvailableBlock] = useState(
     initialContext.availableBlocks
   );
-  const [editorState, setEditorState] = useState<unknown>(
-    initialContext.editorState
-  );
+  const [editorState, setEditorState] = useState(initialContext.editorState);
 
   const [isEditable, setIsEditable] = useState(initialContext.isEditable);
 
@@ -44,13 +43,30 @@ export const BlockForgeProvider: React.FC<{ children: ReactNode }> = ({
     []
   );
 
-  const updateEditorState = (state: unknown) => {
+  const updateEditorState = (state: EditorState) => {
     setEditorState(state);
   };
 
   const updateIsEditable = (editable: boolean) => {
     setIsEditable(editable);
   };
+
+  const addBlock = useCallback(({ type: blockType }: BlockDefinition) => {
+    const prototypeBlock = availableBlocksRef.current.find(
+      (block) => block.type === blockType
+    );
+
+    if (prototypeBlock) {
+      const newBlockInstance = createBlockInstance(prototypeBlock);
+      setEditorState((prevState) => ({
+        ...prevState,
+        block: {
+          ...prevState.block,
+          blocks: [...prevState.block.blocks!, newBlockInstance],
+        },
+      }));
+    }
+  }, []);
 
   const context = useMemo(() => {
     return {
@@ -60,10 +76,11 @@ export const BlockForgeProvider: React.FC<{ children: ReactNode }> = ({
 
       // setters
       registerBlock,
+      addBlock,
       updateEditorState,
       updateIsEditable,
     };
-  }, [availableBlock, editorState, isEditable, registerBlock]);
+  }, [availableBlock, editorState, isEditable, registerBlock, addBlock]);
 
   return (
     <BlockForgeContext.Provider value={context}>

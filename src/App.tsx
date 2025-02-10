@@ -1,11 +1,11 @@
 import "./App.css";
 import { Editor, useBlockForge } from "./pkg";
-import { Image, Text } from "./pkg/blocks";
+import { Container, Image, Text } from "./pkg/blocks";
 
 function App() {
   const { addBlock, registerBlock } = useBlockForge();
 
-  const blocks = registerBlock([Text, Image]);
+  const blocks = registerBlock([Text, Image, Container]);
 
   return (
     <div className="container">
