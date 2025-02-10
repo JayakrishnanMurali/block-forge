@@ -6,13 +6,13 @@
 
 ## API's
 
-[ ] `import {Canvas, useBlockForge, BlockForgeProvider} from '@block-forge'`
-[ ] Pre-built blocks (e.g. `TextBlock`, `ImageBlock`, `VideoBlock`)
+[x] `import {Editor, useBlockForge, BlockForgeProvider} from '@block-forge'`
+[x] `import {Text, Image} from '@block-forge/blocks'`
 
 ## Code Example
 
 ```jsx
-import { Canvas, useBlockForge, BlockForgeProvider } from "@block-forge";
+import { Editor, useBlockForge, BlockForgeProvider } from "@block-forge";
 import { Text, Image } from "@block-forge/blocks";
 
 const App = () => {
@@ -37,7 +37,7 @@ const App = () => {
           <button onClick={() => addBlock(block.type)}>Add {block.type}</button>
         ))}
       </div>
-      <Canvas isEditable />
+      <Editor isEditable />
     </BlockForgeProvider>
   );
 };
